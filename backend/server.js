@@ -8,6 +8,11 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 8080;
 
+console.log('Starting Japan-Africa Car Arbitrage System...');
+console.log('Environment:', process.env.NODE_ENV);
+console.log('Port:', PORT);
+console.log('Use Mock Data:', process.env.USE_MOCK_DATA);
+
 // Middleware
 app.use(helmet());
 app.use(cors());
@@ -45,7 +50,27 @@ app.use('/api/admin', require('./routes/admin'));
 
 // Health check
 app.get('/health', (req, res) => {
-  res.json({ status: 'OK', timestamp: new Date().toISOString() });
+  res.json({ 
+    status: 'OK', 
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV,
+    port: PORT,
+    uptime: process.uptime()
+  });
+});
+
+// Simple root endpoint
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Japan-Africa Car Arbitrage System API',
+    status: 'running',
+    endpoints: {
+      health: '/health',
+      cars: '/api/cars',
+      admin: '/api/admin',
+      scraping: '/api/scraping'
+    }
+  });
 });
 
 // Serve frontend in production
@@ -61,6 +86,46 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Error:', err);
+  res.status(500).json({ 
+    error: 'Internal Server Error',
+    message: process.env.NODE_ENV === 'development' ? err.message : 'Something went wrong'
+  });
+});
+
+// Handle 404
+app.use('*', (req, res) => {
+  if (req.originalUrl.startsWith('/api')) {
+    res.status(404).json({ error: 'API endpoint not found' });
+  } else {
+    // For non-API routes, serve the React app
+    if (process.env.NODE_ENV === 'production') {
+      const path = require('path');
+      res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
+    } else {
+      res.status(404).json({ error: 'Not found' });
+    }
+  }
+});
+
+const server = app.listen(PORT, '0.0.0.0', () => {
+  console.log(`✅ Server successfully started on port ${PORT}`);
+  console.log(`🌐 Health check: http://localhost:${PORT}/health`);
+});
+
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received, shutting down gracefully');
+  server.close(() => {
+    console.log('Process terminated');
+  });
+});
+
+process.on('SIGINT', () => {
+  console.log('SIGINT received, shutting down gracefully');
+  server.close(() => {
+    console.log('Process terminated');
+  });
 });

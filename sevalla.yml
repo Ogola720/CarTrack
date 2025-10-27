@@ -4,43 +4,33 @@ description: System for identifying profitable used car arbitrage opportunities 
 # Build configuration
 build:
   commands:
-    - npm install
-    - cd backend && npm install
-    - cd ../frontend && npm install && npm run build
+    - npm ci --only=production
+    - cd backend && npm ci --only=production
+    - cd ../frontend && npm ci && npm run build
 
 # Runtime configuration
 run:
-  command: npm start
+  command: node backend/server.js
   
 # Environment variables
 env:
   NODE_ENV: production
-  USE_MOCK_DATA: false
+  USE_MOCK_DATA: true
   PORT: 8080
+  PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
 
 # Health check
 health_check:
   path: /health
   port: 8080
-  interval: 30s
-  timeout: 10s
-  retries: 3
-
-# Static files (frontend)
-static:
-  - source: frontend/build
-    destination: /public
-
-# Services
-services:
-  - name: mongodb
-    type: mongodb
-    version: "6.0"
-    storage: 1GB
+  interval: 60s
+  timeout: 30s
+  retries: 5
+  initial_delay: 30s
 
 # Scaling
 scaling:
   min_instances: 1
-  max_instances: 3
+  max_instances: 2
   cpu_threshold: 80
   memory_threshold: 80
