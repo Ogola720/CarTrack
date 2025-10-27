@@ -12,9 +12,7 @@
     "scheduler": "node scheduler/index.js",
     "build": "cd frontend && npm run build",
     "start": "node backend/server.js",
-    "heroku-postbuild": "cd backend && npm install && cd ../frontend && npm install && npm run build",
-    "deploy:docker": "cd deployment && docker-compose up -d",
-    "deploy:stop": "cd deployment && docker-compose down"
+    "postinstall": "cd backend && npm install && cd ../frontend && npm install"
   },
   "keywords": [
     "car",

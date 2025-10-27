@@ -30,24 +30,25 @@ npm run dev
 
 ## 🚀 Deployment
 
-### Quick Deploy
+### Deploy to Sevalla (Recommended)
+
+**Quick Deploy via Web Dashboard:**
+1. Push code to GitHub
+2. Go to [app.sevalla.com](https://app.sevalla.com)
+3. Create new project → Connect GitHub repository
+4. Configure build settings and deploy
+
+**Automated Deploy:**
 ```bash
 # Windows
-deploy.bat
+deploy-sevalla.bat
 
 # Linux/Mac
-chmod +x deploy.sh
-./deploy.sh
+chmod +x deploy-sevalla.sh
+./deploy-sevalla.sh
 ```
 
-### Manual Deployment Options
-
-1. **Heroku** (Easiest - Free tier available)
-2. **Vercel + Railway** (Modern & fast)
-3. **DigitalOcean/AWS** (Full control)
-4. **Docker** (Containerized)
-
-See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions.
+See [SEVALLA_DEPLOY.md](SEVALLA_DEPLOY.md) for detailed instructions.
 
 ## Project Structure
 

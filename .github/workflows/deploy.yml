@@ -1,4 +1,4 @@
-name: Deploy Car Arbitrage System
+name: Deploy to Sevalla
 
 on:
   push:
@@ -25,33 +25,22 @@ jobs:
         cd backend && npm install
         cd ../frontend && npm install
     
-    - name: Run tests
+    - name: Lint code
       run: |
-        # Add your test commands here
-        echo "Tests would run here"
+        echo "Linting would run here"
+        # npm run lint
     
     - name: Build frontend
       run: |
         cd frontend
         npm run build
-
-  deploy-docker:
-    needs: test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
     
-    steps:
-    - uses: actions/checkout@v3
-    
-    - name: Build and push Docker images
+    - name: Test build
       run: |
-        echo "Docker deployment would happen here"
-        # docker build -t car-arbitrage-backend -f deployment/Dockerfile.backend backend/
-        # docker build -t car-arbitrage-frontend -f deployment/Dockerfile.frontend frontend/
-        # docker push your-registry/car-arbitrage-backend
-        # docker push your-registry/car-arbitrage-frontend
+        echo "Build tests would run here"
+        # npm test
 
-  deploy-heroku:
+  deploy-sevalla:
     needs: test
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
@@ -59,10 +48,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
-    - name: Deploy to Heroku
-      uses: akhileshns/heroku-deploy@v3.12.12
-      with:
-        heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-        heroku_app_name: "your-car-arbitrage-app"
-        heroku_email: "your-email@example.com"
-        appdir: "backend"
+    - name: Deploy to Sevalla
+      run: |
+        echo "Sevalla deployment triggered by GitHub push"
+        echo "Sevalla will automatically deploy from this repository"
+        echo "Check your Sevalla dashboard for deployment status"
