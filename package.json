@@ -11,7 +11,8 @@
     "scrape": "node scraper/index.js",
     "scheduler": "node scheduler/index.js",
     "build": "cd frontend && npm run build",
-    "start": "cd backend && npm start",
+    "start": "node backend/server.js",
+    "heroku-postbuild": "cd backend && npm install && cd ../frontend && npm install && npm run build",
     "deploy:docker": "cd deployment && docker-compose up -d",
     "deploy:stop": "cd deployment && docker-compose down"
   },
