@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Build outputs (will be rebuilt)
+frontend/build/
+backend/dist/
+
+# Development files
+.git/
+.github/
+deployment/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Data files (will be created on server)
+data/
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Documentation (not needed for runtime)
+docs/
+*.md
+!README.md
