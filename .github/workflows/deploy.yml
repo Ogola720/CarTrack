@@ -1,0 +1,68 @@
+name: Deploy Car Arbitrage System
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: |
+        npm install
+        cd backend && npm install
+        cd ../frontend && npm install
+    
+    - name: Run tests
+      run: |
+        # Add your test commands here
+        echo "Tests would run here"
+    
+    - name: Build frontend
+      run: |
+        cd frontend
+        npm run build
+
+  deploy-docker:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Build and push Docker images
+      run: |
+        echo "Docker deployment would happen here"
+        # docker build -t car-arbitrage-backend -f deployment/Dockerfile.backend backend/
+        # docker build -t car-arbitrage-frontend -f deployment/Dockerfile.frontend frontend/
+        # docker push your-registry/car-arbitrage-backend
+        # docker push your-registry/car-arbitrage-frontend
+
+  deploy-heroku:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Deploy to Heroku
+      uses: akhileshns/heroku-deploy@v3.12.12
+      with:
+        heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+        heroku_app_name: "your-car-arbitrage-app"
+        heroku_email: "your-email@example.com"
+        appdir: "backend"
